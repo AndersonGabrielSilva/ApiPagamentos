@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pagamento.Dominio.Settings
+﻿namespace Pagamento.Dominio.Settings
 {
     public class AppSettings
     {
+        public string Ambiente { get; set; }
 
         public Sicoob Sicoob { get; set; }
     }
@@ -19,6 +14,5 @@ namespace Pagamento.Dominio.Settings
 
         public string HomoUrlAutenticaOAuth2 { get; set; }        
         public string HomoUrlAccessToken { get; set; }
-
     }
 }

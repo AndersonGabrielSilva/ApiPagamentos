@@ -8,4 +8,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pagamento.Dominio\Pagamento.Dominio.csproj" />
+    <ProjectReference Include="..\Pagamento.Infra.IoC\Pagamento.Infra.CrossCutting.IoC.csproj" />
+  </ItemGroup>
+
 </Project>

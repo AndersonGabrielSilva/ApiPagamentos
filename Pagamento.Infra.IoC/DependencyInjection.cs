@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Pagamento.Dominio.Settings;
 
 namespace Pagamento.Infra.CrossCutting.IoC
 {
@@ -6,9 +8,9 @@ namespace Pagamento.Infra.CrossCutting.IoC
     {
         public static IServiceCollection ConfigureApi(this IServiceCollection service)
         {
-            // Settings
+            
 
-            service.AddSingleton(App)
+            
 
             return service;
         }
