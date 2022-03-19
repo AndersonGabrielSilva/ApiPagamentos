@@ -10,7 +10,6 @@
     <Folder Include="DTO\Sicoob\Cobranca-Pagamento-Api\" />
     <Folder Include="DTO\Sicoob\" />
     <Folder Include="Enum\Sicoob\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

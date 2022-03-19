@@ -1,36 +1,65 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pagamento.Dominio.Interfaces.Services;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using System;
+using Pagamento.Dominio.Exceptions;
 
 namespace ApiPagamentos.Controllers
 {
     public class AuthServiceController : BaseController
     {
-        public AuthServiceController()
-        {
+        public IAuthSicoobService AuthSicoobService { get; }
 
+        public AuthServiceController(IAuthSicoobService authSicoobService)
+        {
+            AuthSicoobService = authSicoobService;
         }
-                
+
         // api/AuthService/return/{clienteid}/sicoob
-        [HttpGet("return/{clienteId}/sicoob")]
-        public async Task<IActionResult> RecebeCodigoSicoob([FromRoute] string cliente, [FromQuery][Required()] string code)
+        [HttpGet("return/{credenciasId}/sicoob")]
+        public async Task<IActionResult> RecebeCodigoSicoob([FromRoute][Required()] int credenciasId, [FromQuery][Required()] string code)
         {
-            return Ok();
+            try
+            {
+                return Ok();
+
+            }
+            catch (Exception)
+            {
+                return BadRequest();                
+            }
         }
 
-        //api/AuthService/gerarurloAuth2/{clienteid}/sicoob?clienteId=
-        [HttpGet("gerarurloAuth2/{clienteId}/sicoob")]
-        public async Task<IActionResult> GerarUrlOAuth2Sicoob([FromQuery] string clienteId)
+        //api/AuthService/gerarurloAuth2/{usuarioId}/sicoob?credenciasId=
+        [HttpGet("gerarurloAuth2/{usuarioId}/sicoob")]
+        public async Task<IActionResult> GerarUrlOAuth2Sicoob([FromRoute][Required()] int usuarioId, [FromQuery][Required()] int credenciasId)
         {
-
-            return Ok();
+            try
+            {
+                return Ok(AuthSicoobService.GerarUrloAuth2(usuarioId, credenciasId));
+            }
+            catch(BaseException baseEx)
+            {
+                return 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Não foi possivel gerar a Url de Autorização traceId:{"ID"}");
+            }
         }
 
-        [HttpGet("refleshToken/{clienteId}/sicoob")]
-        public async Task<IActionResult> RefleshTokenSicoob([FromQuery] string clienteId)
+        [HttpGet("refleshToken/{credenciasId}/sicoob")]
+        public async Task<IActionResult> RefleshTokenSicoob([FromRoute][Required()] string credenciasId)
         {
-
-            return Ok();
+            try
+            {
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }

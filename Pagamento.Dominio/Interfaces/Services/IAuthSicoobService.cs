@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Pagamento.Dominio.Interfaces.Services
 {
-    public interface IAuthSicoobService
+    public interface IAuthSicoobService : INotifications
     {
-        string GerarUrloAuth2(string clienteId);
+        Task<string> GerarUrloAuth2(int usuarioId, int credenciasId);
     }
 }
