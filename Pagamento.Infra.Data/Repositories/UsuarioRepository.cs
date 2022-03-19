@@ -10,16 +10,23 @@ namespace Pagamento.Infra.Data.Repositories
     {
         public PagamentosContext PagContext { get; }
 
-        public UsuarioRepository(PagamentosContext pagContext)
+        //public UsuarioRepository(PagamentosContext pagContext)
+        //{
+        //    PagContext = pagContext;
+        //}
+
+        public UsuarioRepository()
         {
-            PagContext = pagContext;
+
         }
 
         public async Task<Credencias> ObterCredencial(int usuarioId, int credenciasId)
         {
             try
             {
-                return await PagContext.Credencias.FirstOrDefaultAsync(c => c.UsuarioId == usuarioId && c.Id == credenciasId && c.IsActive);
+                var teste = Credencias.GetCredenciasFactory();
+                //return await PagContext.Credencias.FirstOrDefaultAsync(c => c.UsuarioId == usuarioId && c.Id == credenciasId && c.IsActive);
+                return await Task.FromResult(teste.FirstOrDefault(c => c.UsuarioId == usuarioId && c.Id == credenciasId && c.IsActive));
             }
             catch (Exception ex)
             {

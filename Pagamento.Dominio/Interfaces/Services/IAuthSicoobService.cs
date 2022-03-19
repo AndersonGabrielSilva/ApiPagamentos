@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pagamento.Dominio.DTO.Sicoob;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Pagamento.Dominio.Interfaces.Services
 {
     public interface IAuthSicoobService : INotifications
     {
-        Task<string> GerarUrloAuth2(int usuarioId, int credenciasId);
+        Task<UrlAutorizeoAuth2DTO> GerarUrloAuth2(int usuarioId, int credenciasId);
     }
 }

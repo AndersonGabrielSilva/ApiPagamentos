@@ -28,9 +28,11 @@ namespace ApiPagamentos
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiPagamentos", Version = "v1" });
             });
 
+            var app = Configuration.GetSection("AppSettings").Get<AppSettings>();
+
             //Configure Api
-            services.ConfigureApi()
-                    .AddSingleton(Configuration.GetSection("AppSettings"));
+            services.AddSingleton(app)
+                    .ConfigureApi();
 
         }
 

@@ -19,7 +19,11 @@ namespace Pagamento.Dominio.Entities
 
         public IReadOnlyCollection<string> Notes { get => _notes; }
 
-        public bool ContainNotes => !_notes.IsNullOrEmpty();
+        private bool _containErrors;
+        public bool ContainErrors { get => _containErrors; }
+
+        private INotifications _notifications;
+        public INotifications Notifications => _notifications;
 
         public INotifications AddNote(string note)
         {
@@ -47,10 +51,35 @@ namespace Pagamento.Dominio.Entities
 
         public INotifications AddTraceId(string traceId)
         {
+            _containErrors = true;
+
             if (string.IsNullOrEmpty(TraceId))
                 TraceId = traceId;
 
             return this;
+        }
+
+        public IList<string> GetNotes() => _notes;
+
+        public INotifications AddNotify(INotifications notifications)
+        {
+            _notifications = notifications;
+
+            return this;
+        }
+
+        public IList<string> GetAllNotes()
+        {
+            var result = new List<string>();
+            var notesAll = Notifications?.GetAllNotes();
+
+            if (!_notes.IsNullOrEmpty())
+                result.AddRange(_notes);
+
+            if (!notesAll.IsNullOrEmpty())
+                result.AddRange(notesAll);
+
+            return result;
         }
     }
 }

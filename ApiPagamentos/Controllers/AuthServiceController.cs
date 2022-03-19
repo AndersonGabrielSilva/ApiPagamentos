@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System;
 using Pagamento.Dominio.Exceptions;
+using Pagamento.Dominio.DTO;
+using System.Linq;
 
 namespace ApiPagamentos.Controllers
 {
@@ -37,15 +39,19 @@ namespace ApiPagamentos.Controllers
         {
             try
             {
-                return Ok(AuthSicoobService.GerarUrloAuth2(usuarioId, credenciasId));
+                var Url = await AuthSicoobService.GerarUrloAuth2(usuarioId, credenciasId);
+                if(Url is not null)
+                    return Ok(Url);
+
+                return BadRequest(new ResponseRequestError("Não foi possivel gerar a Url", AuthSicoobService.GetAllNotes()));
             }
-            catch(BaseException baseEx)
+            catch(BaseException ex)
             {
-                return 
+                return BadRequest(new ResponseRequestError($"Não foi possivel gerar a Url TraceId:{ex.TraceId}", ex.Notes.ToList()));
             }
             catch (Exception ex)
-            {
-                return BadRequest($"Não foi possivel gerar a Url de Autorização traceId:{"ID"}");
+            {                
+                return BadRequest(new ResponseRequestError($"Não foi possivel gerar a Url \n {ex.Message}", AuthSicoobService.GetAllNotes()));
             }
         }
 
