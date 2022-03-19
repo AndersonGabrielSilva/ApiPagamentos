@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Pagamento.Dominio.Entities.Auth;
+using Pagamento.Dominio.Entities.Logs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +31,14 @@ namespace Pagamento.Dominio.Extensions
             return list is null || list.Count() == 0;
         }    
 
+    }
+
+    public static class LogExtensions 
+    {
+        public static LogAcessTokenRequest CreateLog(this AcessTokenRequest acessTokenRequest, AcessTokenRequest acessTokenRequestNovo = null, string Observacao = "")
+        {
+            return new LogAcessTokenRequest(acessTokenRequest, acessTokenRequestNovo, Observacao);
+        }
     }
 }
 

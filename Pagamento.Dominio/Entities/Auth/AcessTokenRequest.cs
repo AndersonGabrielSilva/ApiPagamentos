@@ -1,4 +1,5 @@
-﻿using Pagamento.Dominio.Entities.Auth;
+﻿using Pagamento.Dominio.DTO.Sicoob;
+using Pagamento.Dominio.Entities.Auth;
 using Pagamento.Dominio.Entities.Sicoob;
 using System;
 using System.Collections.Generic;
@@ -21,10 +22,25 @@ namespace Pagamento.Dominio.Entities.Auth
         public string scope { get; set; }
         public string token_type { get; set; }
         public long expires_in { get; set; }
+        public DateTime? DtaExpiracao { get; set; }
 
         #region Relacionamentos
         public int? CredenciasId { get; set; }
         public Credencias credencias { get; set; }
+
+        public void Update(AcessTokenRequestResponseDTO response)
+        {
+            acess_token = response.acess_token;
+            refresh_token = response.refresh_token;
+            scope = response.scope;
+            token_type = response.token_type;
+            expires_in = response.ObterPeriodoExpiracao();
+            DtaExpiracao = response.ObterDtaDeExpiracao();
+        }
+
+        public AcessTokenRequest GetClone()=>
+            (AcessTokenRequest)this.MemberwiseClone();
+        
     }
     #endregion
 }

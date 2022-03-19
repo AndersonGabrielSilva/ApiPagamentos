@@ -24,6 +24,7 @@ namespace ApiPagamentos.Controllers
         {
             try
             {
+                await AuthSicoobService.GerarAcessToken(credenciasId, code);
                 return Ok();
 
             }

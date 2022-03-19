@@ -8,7 +8,7 @@ namespace Pagamento.Dominio.DTO
 {
     public class ResponseRequestBase
     {
-        public ResponseRequestBase(string mensagem, IList<string> notes)
+        public ResponseRequestBase(string mensagem, IList<string> notes = null)
         {
             this.Mensagem = mensagem;
             this.Notes = notes;

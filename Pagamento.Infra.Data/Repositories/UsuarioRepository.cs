@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pagamento.Dominio.DTO.Sicoob;
+using Pagamento.Dominio.Entities.Auth;
 using Pagamento.Dominio.Entities.Sicoob;
 using Pagamento.Dominio.Exceptions;
+using Pagamento.Dominio.Extensions;
 using Pagamento.Dominio.Interfaces.Repositories;
 using Pagamento.Infra.Data.Context;
 
@@ -34,6 +37,47 @@ namespace Pagamento.Infra.Data.Repositories
                          .AddTraceId("C4288E76")
                          .AddNote("Não foi possivel encontrar a credencial de usuario");
             }
+        }
+
+        public Task<Credencias> ObterCredencialParaAtualizarAcessToken(int credenciasId)
+        {
+            
+        }
+
+        public async Task AtualizaAcessTokenRequest(int credenciasId, AcessTokenRequestResponseDTO response)
+        {
+            var acessToken = await PagContext.AcessTokenRequest.FirstOrDefaultAsync(acess => acess.CredenciasId == credenciasId);
+
+            if(acessToken == null)
+            {
+                var newAcessToken = new AcessTokenRequest()
+                {
+                    CredenciasId = credenciasId,
+                    acess_token = response.acess_token,
+                    refresh_token = response.refresh_token,
+                    scope = response.scope,
+                    token_type = response.token_type,
+                    expires_in = response.ObterPeriodoExpiracao(),
+                    DtaExpiracao = response.ObterDtaDeExpiracao()
+                };
+
+                PagContext.Add(newAcessToken);
+
+                //Log
+                var IncludeLog = newAcessToken.CreateLog(null, "Adicionando AcessTokenRequest");
+                PagContext.Add(IncludeLog);
+            }
+            else
+            {
+                var _oldAcessToken = acessToken.GetClone();
+                acessToken.Update(response);
+
+                //Log
+                var updateLog = _oldAcessToken.CreateLog(acessToken,"Atualizando AcessTokenRequest");
+                PagContext.Add(updateLog);
+            }        
+
+            await PagContext.SaveChangesAsync();
         }
     }
 }
