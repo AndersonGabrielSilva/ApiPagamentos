@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Pagamento.Dominio.Entities.Auth;
+using Pagamento.Dominio.Entities.Sicoob;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pagamento.Dominio.Entities.Cliente
+namespace Pagamento.Dominio.Entities.Auth
 {
-    public class ClienteRequest 
+    public class AcessTokenRequest
     {
-        public ClienteRequest()
+        public AcessTokenRequest()
         {
             Id = Guid.NewGuid();
         }
@@ -20,5 +22,10 @@ namespace Pagamento.Dominio.Entities.Cliente
         public string token_type { get; set; }
         public long expires_in { get; set; }
 
+        #region Relacionamentos
+        public int? CredenciasId { get; set; }
+        public Credencias credencias { get; set; }
     }
+    #endregion
 }
+

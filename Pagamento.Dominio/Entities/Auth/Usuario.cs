@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Pagamento.Dominio.Entities.Sicoob;
+using Pagamento.Dominio.ValueObjects;
 
 namespace Pagamento.Dominio.Entities.Auth
 {
-    public class Usuario
+
+    /// <summary>
+    /// É a empresa que deseja utilizar a API
+    /// </summary>
+    public class Usuario : Entity
     {
+        public string Nome{ get; set; }
+
+        public int? ExternalId { get; set; }
+
+        public Documento Documento { get; set; }
+
+        public List<Credencias> Credencias { get; set; }
+
     }
 }

@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pagamento.Aplicacao\Pagamento.Aplicacao.csproj" />
     <ProjectReference Include="..\Pagamento.Dominio\Pagamento.Dominio.csproj" />
   </ItemGroup>
 

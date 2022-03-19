@@ -1,10 +1,12 @@
-﻿using Pagamento.Dominio.Enum;
+﻿using Pagamento.Dominio.Entities.Auth;
+using Pagamento.Dominio.Enum;
 using System.Collections.Generic;
 
 namespace Pagamento.Dominio.Entities.Sicoob
 {
-    public  class Credencias
+    public class Credencias : Entity
     {
+        #region Dados da Credencial
         public string Cooperativa { get; set; }
         public string Conta { get; set; }
         public string ChaveAcesso { get; set; }
@@ -16,7 +18,17 @@ namespace Pagamento.Dominio.Entities.Sicoob
         public string URLAuthorize { get; set; }
 
         public TipoPessoa Tipo { get; set; }
+        #endregion
 
+        #region Relacionamentos
+        public int? AcessTokenRequestId { get; set; }
+        public virtual AcessTokenRequest AcessTokenRequest { get; set; }
+
+        public int UsuarioId { get; set; }
+        public Usuario Usuario { get; set; }
+        #endregion
+
+        #region Dados Mokados
         public static List<Credencias> GetCredenciasFactory()
         {
             return new List<Credencias> 
@@ -49,5 +61,6 @@ namespace Pagamento.Dominio.Entities.Sicoob
             };
             
         }
+        #endregion
     }
 }

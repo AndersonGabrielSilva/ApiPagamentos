@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pagamento.Dominio.ValueObjects
+namespace Pagamento.Dominio.Interfaces.Repositories
 {
-    internal class Class1
+    public interface IUsuarioRepository
     {
+
     }
 }

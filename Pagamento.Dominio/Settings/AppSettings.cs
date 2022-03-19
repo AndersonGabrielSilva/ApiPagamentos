@@ -11,6 +11,7 @@
     {
         public string UrlAutenticaOAuth2 { get; set; }
         public string UrlAccessToken { get; set; }
+        public string CallbackUrl { get; set; }
 
         public string HomoUrlAutenticaOAuth2 { get; set; }        
         public string HomoUrlAccessToken { get; set; }
