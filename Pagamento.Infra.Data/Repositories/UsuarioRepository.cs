@@ -39,9 +39,9 @@ namespace Pagamento.Infra.Data.Repositories
             }
         }
 
-        public Task<Credencias> ObterCredencialParaAtualizarAcessToken(int credenciasId)
+        public async Task<Credencias> ObterCredencialParaAtualizarAcessToken(int credenciasId)
         {
-            
+            return await Task.FromResult(Credencias.GetCredenciasFactory().Where(x => x.Id == credenciasId).FirstOrDefault());
         }
 
         public async Task AtualizaAcessTokenRequest(int credenciasId, AcessTokenRequestResponseDTO response)

@@ -24,12 +24,13 @@ namespace ApiPagamentos.Controllers
         {
             try
             {
-                await AuthSicoobService.GerarAcessToken(credenciasId, code);
-                return Ok();
+                var response = await AuthSicoobService.GerarAcessToken(credenciasId, code);
+                return Ok(response);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                var msg = ex.Message;
                 return BadRequest();                
             }
         }

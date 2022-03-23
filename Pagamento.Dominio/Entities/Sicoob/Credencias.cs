@@ -66,7 +66,7 @@ namespace Pagamento.Dominio.Entities.Sicoob
                     URLAuthorize = @"https://sandbox.sicoob.com.br/oauth2/authorize?" ,
                     Tipo = TipoPessoa.PessoaFisica,
 
-                    CallBackUrl = "andersongabriel.dev",
+                    CallBackUrl = "https://www.andersongabriel.dev",
                     UsuarioId = 10,
                     IsActive = true                    
                 },
