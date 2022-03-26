@@ -8,6 +8,8 @@ using Pagamento.Dominio.Settings;
 using RestSharp;
 using RestSharp.Authenticators;
 using System.Configuration;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace Pagamento.Aplicacao.Services
@@ -54,42 +56,82 @@ namespace Pagamento.Aplicacao.Services
 
         public async Task<ResponseRequestBase> GerarAcessToken(int credenciasId, string code)
         {
+            return await GerarAcessToken2(credenciasId, code);
+
+            //var credencial = await UsuarioRepository.ObterCredencialParaAtualizarAcessToken(credenciasId);
+
+            //var baseUri = AppSettings.Sicoob.UrlAccessToken;
+
+            //var options = new RestClientOptions(baseUri);
+            //var client = new RestClient(options);
+
+            //var request = new RestRequest("", Method.Post)
+            //              .AddHeader("content-type", @"application/x-www-form-urlencoded")
+            //              .AddHeader("Authorization", $"Basic {credencial.TokenBasic}")
+            ////.AddParameter("application/x-www-form-urlencoded",
+            ////$"grant_type=authorization_code&code={code}&redirect_uri={credencial.CallBackUrl}",
+            ////             ParameterType.RequestBody);
+            ////.AddBody(new Teste
+            //// {
+            ////    grant_type = "authorization_code",
+            ////    code = code,
+            ////    redirect_uri = credencial.CallBackUrl
+            ////}, "application/x-www-form-urlencoded");
+            ////.AddParameter("grant_type", "authorization_code", ParameterType.RequestBody)
+            ////.AddParameter("code", code, ParameterType.RequestBody)
+            ////.AddParameter("redirect_uri", credencial.CallBackUrl, ParameterType.RequestBody);
+            //.AddParameter(CreateParameterForm("grant_type", "authorization_code"))
+            //.AddParameter(CreateParameterForm("code", code))
+            //.AddParameter(CreateParameterForm("redirect_uri", credencial.CallBackUrl));
+            ////.AddParameter(CreateParameterForm("application/x-www-form-urlencoded", $"grant_type=authorization_code&code={code}&redirect_uri={credencial.CallBackUrl}"));
+            ////.AddParameter("", "", ParameterType.RequestBody);
+            
+            //var response = await client.PostAsync(request);
+            ////var response = await client.PostAsync<AcessTokenRequestResponseDTO>(request);
+            //AcessTokenRequestResponseDTO AcessToken = null;
+            //if (response.IsSuccessful)
+            //{
+            //    AcessToken = JsonSerializer.Deserialize<AcessTokenRequestResponseDTO>(response.Content, new JsonSerializerOptions { PropertyNameCaseInsensitive = false });
+
+            //    await UsuarioRepository.AtualizaAcessTokenRequest(credenciasId, AcessToken);
+
+            //    return new ResponseRequestBase("Token atualizado com sucesso",
+            //           new List<string> { $"Scopos autotizados {AcessToken.scope}" });
+            //}
+            //else
+            //    return new ResponseRequestError("Houve um erro ao tentar gerar o AcessToken",
+            //           new List<string>() { response.Content?.ToString() });
+
+        }
+
+        public async Task<ResponseRequestBase> GerarAcessToken2(int credenciasId, string code)
+        {
             var credencial = await UsuarioRepository.ObterCredencialParaAtualizarAcessToken(credenciasId);
 
             var baseUri = AppSettings.Sicoob.UrlAccessToken;
 
-            var options = new RestClientOptions(baseUri);
-            var client = new RestClient(options);
+            using HttpClient _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri(baseUri);
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Basic {credencial.TokenBasic}"); 
+            //_httpClient.DefaultRequestHeaders.Add("content-type", @"application/x-www-form-urlencoded");
+            //dados form
+            var data = new Dictionary<string, string>();
+            data.Add("grant_type", "authorization_code");
+            data.Add("code", code);
+            data.Add("redirect_uri", credencial.CallBackUrl);
 
-            var request = new RestRequest("", Method.Post)
-                          .AddHeader("content-type", @"application/x-www-form-urlencoded")
-                          .AddHeader("Authorization", $"Basic {credencial.TokenBasic}")
-            //.AddParameter("application/x-www-form-urlencoded",
-            //$"grant_type=authorization_code&code={code}&redirect_uri={credencial.CallBackUrl}",
-            //             ParameterType.RequestBody);
-            //.AddBody(new Teste
-            // {
-            //    grant_type = "authorization_code",
-            //    code = code,
-            //    redirect_uri = credencial.CallBackUrl
-            //}, "application/x-www-form-urlencoded");
-            //.AddParameter("grant_type", "authorization_code", ParameterType.RequestBody)
-            //.AddParameter("code", code, ParameterType.RequestBody)
-            //.AddParameter("redirect_uri", credencial.CallBackUrl, ParameterType.RequestBody);
-            .AddParameter(CreateParameterForm("grant_type", "authorization_code"))
-            .AddParameter(CreateParameterForm("code", code))
-            .AddParameter(CreateParameterForm("redirect_uri", credencial.CallBackUrl));
-            //.AddParameter(CreateParameterForm("application/x-www-form-urlencoded", $"grant_type=authorization_code&code={code}&redirect_uri={credencial.CallBackUrl}"));
-            //.AddParameter("", "", ParameterType.RequestBody);
+            using var body = new FormUrlEncodedContent(data);
+            body.Headers.Clear();
+            //body.Headers.Add("Authorization", $"Basic {credencial.TokenBasic}");
+            body.Headers.Add("content-type", @"application/x-www-form-urlencoded");
 
+            var response = await _httpClient.PostAsync("",body);
 
-
-            var response = await client.ExecuteAsync(request);
-            //var response = await client.PostAsync<AcessTokenRequestResponseDTO>(request);
             AcessTokenRequestResponseDTO AcessToken = null;
-            if (response.IsSuccessful)
+            if (response.IsSuccessStatusCode)
             {
-                AcessToken = JsonSerializer.Deserialize<AcessTokenRequestResponseDTO>(response.Content, new JsonSerializerOptions { PropertyNameCaseInsensitive = false });
+                var jsonContent = await response.Content.ReadAsStringAsync();
+                AcessToken = JsonSerializer.Deserialize<AcessTokenRequestResponseDTO>(jsonContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 await UsuarioRepository.AtualizaAcessTokenRequest(credenciasId, AcessToken);
 
@@ -98,11 +140,11 @@ namespace Pagamento.Aplicacao.Services
             }
             else
                 return new ResponseRequestError("Houve um erro ao tentar gerar o AcessToken",
-                       new List<string>() { response.Content?.ToString() });
+                       new List<string>() { await response.Content.ReadAsStringAsync() });
 
         }
 
-        public BodyParameter CreateParameterForm(string Name,string Value)
+        public BodyParameter CreateParameterForm(string Name, string Value)
         {
             return new BodyParameter(Name, Value, "application/x-www-form-urlencoded");
         }

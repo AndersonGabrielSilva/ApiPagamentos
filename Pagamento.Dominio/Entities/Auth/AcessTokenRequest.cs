@@ -17,7 +17,7 @@ namespace Pagamento.Dominio.Entities.Auth
         }
 
         public Guid Id { get; set; }
-        public string acess_token { get; set; }
+        public string access_token { get; set; }
         public string refresh_token { get; set; }
         public string scope { get; set; }
         public string token_type { get; set; }
@@ -30,7 +30,7 @@ namespace Pagamento.Dominio.Entities.Auth
 
         public void Update(AcessTokenRequestResponseDTO response)
         {
-            acess_token = response.acess_token;
+            access_token = response.access_token;
             refresh_token = response.refresh_token;
             scope = response.scope;
             token_type = response.token_type;

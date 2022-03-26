@@ -53,7 +53,7 @@ namespace Pagamento.Infra.Data.Repositories
                 var newAcessToken = new AcessTokenRequest()
                 {
                     CredenciasId = credenciasId,
-                    acess_token = response.acess_token,
+                    access_token = response.access_token,
                     refresh_token = response.refresh_token,
                     scope = response.scope,
                     token_type = response.token_type,

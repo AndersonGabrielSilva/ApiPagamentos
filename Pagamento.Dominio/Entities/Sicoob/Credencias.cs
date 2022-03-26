@@ -66,7 +66,7 @@ namespace Pagamento.Dominio.Entities.Sicoob
                     URLAuthorize = @"https://sandbox.sicoob.com.br/oauth2/authorize?" ,
                     Tipo = TipoPessoa.PessoaFisica,
 
-                    CallBackUrl = "https://www.andersongabriel.dev",
+                    CallBackUrl = "andersongabriel.dev",
                     UsuarioId = 10,
                     IsActive = true                    
                 },
@@ -84,7 +84,7 @@ namespace Pagamento.Dominio.Entities.Sicoob
                     URLAuthorize = @"https://sandbox.sicoob.com.br/oauth2/authorize?",
                     Tipo = TipoPessoa.PessoaJuridica,
 
-                    CallBackUrl = "https://andersongabriel.dev",
+                    CallBackUrl = "andersongabriel.dev",
                     UsuarioId = 15,
                     IsActive = true
                 }
